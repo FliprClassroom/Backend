@@ -18,7 +18,7 @@ class RegistrationAPIView(APIView):
             usr_obj = User()
             usr_obj.username = req.data.get("username")
             usr_obj.email = req.data.get("email")
-            usr_obj.is_staff = req.data.get("teacher")
+            usr_obj.is_staff = req.data.get("is_staff")!=None
             usr_obj.set_password(req.data.get("password"))
             usr_obj.save()
             refresh = RefreshToken.for_user(usr_obj)
@@ -43,7 +43,9 @@ class ReadOnly(BasePermission):
         return request.method in SAFE_METHODS
 
 class SubjectAPIView(viewsets.ModelViewSet):
-    # permission_classes = [IsAdminUser|ReadOnly]
+    permission_classes = [IsAdminUser|ReadOnly]
+    # permission_classes = [IsAuthenticated]
+    
     pagination_class=TenPerPage
     serializer_class=SubjectSerializer
     queryset=Subject.objects.all()
@@ -64,3 +66,8 @@ class UserSubjectRelationAPIView(viewsets.ModelViewSet):
     pagination_class=TenPerPage
     serializer_class=UserSubjectRelationSerializer
     queryset=UserSubjectRelation.objects.all()
+
+class testt(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,req):
+        return Response("ok")
