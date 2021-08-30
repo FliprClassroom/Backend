@@ -4,9 +4,14 @@ from django.contrib.auth.models import User
 from .models import *
 
 class RegistrationAPISerializer(serializers.ModelSerializer):
-     class Meta:
-        model = User
-        fields = ("username","password","email","is_staff")
+   class Meta:
+      model = User
+      fields = ("username","password","email","is_staff")
+
+class StudentInfoSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = User
+      fields = ("id","username","email","is_staff")
 
 class SubjectSerializer(serializers.ModelSerializer):
    class Meta:
