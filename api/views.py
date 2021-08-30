@@ -13,6 +13,7 @@ class RegistrationAPIView(APIView):
             usr_obj = User()
             usr_obj.username = req.data.get("username")
             usr_obj.email = req.data.get("email")
+            usr_obj.role = req.data.get("role")
             usr_obj.set_password(req.data.get("password"))
             usr_obj.save()
             refresh = RefreshToken.for_user(usr_obj)
