@@ -56,6 +56,17 @@ class StudentAnswer(models.Model):
     question = models.ForeignKey(Question, on_delete=CASCADE, null=True)
     answer = models.IntegerField(choices=choice, null=True)
     def __str__(self):
-        return self.answer
+        return str(self.answer)
+    class Meta:
+        ordering = ["pk"]
+
+class StudentScore(models.Model):
+    student = models.ForeignKey(User, on_delete=CASCADE , null=True)
+    test = models.ForeignKey(Test, on_delete=CASCADE, blank=True, null=True)
+    assignment = models.ForeignKey(Assignment, on_delete=CASCADE, blank=True, null=True)
+    score = models.IntegerField(null=True)
+    total_questions = models.IntegerField(null=True)
+    def __str__(self):
+        return str(self.score)+"/"+str(self.total_questions)
     class Meta:
         ordering = ["pk"]

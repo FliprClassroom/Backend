@@ -117,16 +117,79 @@ class QuestionsOfAssignment(APIView):
         try:
             questions = Question.objects.filter(assignment=pk)
             questions_ser = QuestionSerializer(questions,many=True)
+            for item in questions_ser.data: del item["answer"]
             return Response(questions_ser.data)
         except Exception as e:
             return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class QuestionsOfAssignmentWithoutAnswers(APIView):
+class QuestionsOfAssignmentWithAnswers(APIView):
     def get(self,req,pk):
         try:
             questions = Question.objects.filter(assignment=pk)
             questions_ser = QuestionSerializer(questions,many=True)
             return Response(questions_ser.data)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class AnswerAssignment(APIView):
+    def post(self,req):
+        data = req.data
+        score = 0
+        total_questions = 0;
+        try:
+            assignment = Assignment.objects.get(pk=data.get('assignment'))
+            questions = Question.objects.filter(assignment=assignment.pk)
+            total_questions = len(questions)
+            student_id = data.get("student")
+            answers = data.get("answers")
+            for answer in answers:
+                answer["student"] = student_id
+                if questions.get(pk=answer.get("question")).answer == answer.get("answer"): score+=1
+                student_answer_ser = StudentAnswerSerializer(data = answer)
+                if not student_answer_ser.is_valid():
+                    return Response(student_answer_ser.errors,status=status.HTTP_400_BAD_REQUEST)
+                student_answer_ser.save()
+            student_score_ser = StudentScoreSerializer(data = {
+                "student":student_id,
+                "assignment":assignment.pk,
+                "score":score,
+                "total_questions":total_questions
+            })
+            if not student_score_ser.is_valid():
+                return Response(student_score_ser.errors,status=status.HTTP_400_BAD_REQUEST)
+            student_score_ser.save()
+            return Response(student_score_ser.data)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class AnswerTest(APIView):
+    def post(self,req):
+        data = req.data
+        score = 0
+        total_questions = 0;
+        try:
+            test = Test.objects.get(pk=data.get('assignment'))
+            questions = Question.objects.filter(assignment=test.pk)
+            total_questions = len(questions)
+            student_id = data.get("student")
+            answers = data.get("answers")
+            for answer in answers:
+                answer["student"] = student_id
+                if questions.get(pk=answer.get("question")).answer == answer.get("answer"): score+=1
+                student_answer_ser = StudentAnswerSerializer(data = answer)
+                if not student_answer_ser.is_valid():
+                    return Response(student_answer_ser.errors,status=status.HTTP_400_BAD_REQUEST)
+                student_answer_ser.save()
+            student_score_ser = StudentScoreSerializer(data = {
+                "student":student_id,
+                "test":test.pk,
+                "score":score,
+                "total_questions":total_questions
+            })
+            if not student_score_ser.is_valid():
+                return Response(student_score_ser.errors,status=status.HTTP_400_BAD_REQUEST)
+            student_score_ser.save()
+            return Response(student_score_ser.data)
         except Exception as e:
             return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

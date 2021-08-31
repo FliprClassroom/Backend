@@ -37,3 +37,13 @@ class QuestionSerializer(serializers.ModelSerializer):
    class Meta:
       model = Question
       fields = "__all__"
+
+class StudentAnswerSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = StudentAnswer
+      fields = "__all__"
+
+class StudentScoreSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = StudentScore
+      fields = "__all__"

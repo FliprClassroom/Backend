@@ -22,7 +22,11 @@ urlpatterns = [
     path('users_with_subject/<int:pk>/',Users_with_subject.as_view()),
     path('subjects_of_user/<int:pk>/',Subjects_of_user.as_view()),
     path('create_assignment/',CreateAssignment.as_view()),
+    path('answer_assignment/',AnswerAssignment.as_view()),
     path('create_test/',CreateTest.as_view()),
+    path('answer_test/',AnswerTest.as_view()),
     path('assignment_of_subject/<int:pk>/',Assignment_of_subject.as_view()),
+    path('questions_of_assignment/<int:pk>/',QuestionsOfAssignment.as_view()),
+    path('questions_of_assignment_with_answer/<int:pk>/',QuestionsOfAssignmentWithAnswers.as_view()),
     path('getuser/', getUser.as_view())
 ]
