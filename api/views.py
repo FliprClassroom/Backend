@@ -52,6 +52,67 @@ class Subjects_of_user(APIView):
         users = SubjectSerializer(listt,many = True)
         return paginator.get_paginated_response(users.data)
 
+class CreateAssignment(APIView):
+    def post(self,req):
+        try:
+            data = req.data
+            title = data.get('title')
+            subject = data.get('subject')
+            try: subject = Subject.objects.get(id=subject)
+            except: return Response('subject do not exist', status=status.HTTP_404_NOT_FOUND)
+            questions = data.get('questions')
+            if type(questions)!=list:
+                return Response("questions must be a list",status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            assignment_instance = Assignment(title=title,subject=subject)
+            assignment_instance.save()
+            for item in questions:
+                item["assignment"] = assignment_instance.pk
+            questions_ser = QuestionSerializer(data=questions,many=True)
+            if questions_ser.is_valid():
+                questions_ser.save()
+            ser = AssignmentSerializer(assignment_instance)
+            data = ser.data
+            data["questions"] = questions_ser.data
+            return Response(data)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+class CreateTest(APIView):
+    def post(self,req):
+        try:
+            data = req.data
+            title = data.get('title')
+            subject = data.get('subject')
+            try: subject = Subject.objects.get(id=subject)
+            except: return Response('subject do not exist', status=status.HTTP_404_NOT_FOUND)
+            questions = data.get('questions')
+            if type(questions)!=list:
+                return Response("questions must be a list",status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            test_instance = Test(title=title,subject=subject)
+            test_instance.save()
+            for item in questions:
+                item["test"] = test_instance.pk
+            questions_ser = QuestionSerializer(data=questions,many=True)
+            if questions_ser.is_valid():
+                questions_ser.save()
+            ser = TestSerializer(test_instance)
+            data = ser.data
+            data["questions"] = questions_ser
+            return Response(data)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class Assignment_of_subject(APIView):
+    def get(self,req,pk):
+        try:
+            assignment = Assignment.objects.get(subject=pk)
+            questions = Question.objects.filter(assignment=assignment.id)
+            assignment_ser = AssignmentSerializer(assignment)
+            questions_ser = QuestionSerializer(questions,many=True)
+            return Response({"assignment":assignment_ser.data,"questions":questions_ser.data})
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class TenPerPage(PageNumberPagination):
     page_size = 10
 

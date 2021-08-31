@@ -21,4 +21,7 @@ urlpatterns = [
     path('register/',RegistrationAPIView.as_view(),name='register'),
     path('users_with_subject/<int:pk>/',Users_with_subject.as_view()),
     path('subjects_of_user/<int:pk>/',Subjects_of_user.as_view()),
+    path('create_assignment/',CreateAssignment.as_view()),
+    path('create_test/',CreateTest.as_view()),
+    path('assignment_of_subject/<int:pk>/',Assignment_of_subject),
 ]

@@ -36,6 +36,26 @@ class UserSubjectRelation(models.Model):
     class Meta:
         ordering = ["user"]
 
-# class Question(models.Model):
-#     test = models.ForeignKey(Test, on_delete=CASCADE, blank=True)
-
+choice = ((1,'option 1'), (2,'option 2'), (3,'option 3'), (4,'option 4'))
+class Question(models.Model):
+    test = models.ForeignKey(Test, on_delete=CASCADE, blank=True, null=True)
+    assignment = models.ForeignKey(Assignment, on_delete=CASCADE, blank=True, null=True)
+    question = models.CharField(max_length=1000, blank=False)
+    option1 = models.CharField(max_length=1000, blank=False)
+    option2 = models.CharField(max_length=1000, blank=False)
+    option3 = models.CharField(max_length=1000, blank=False)
+    option4 = models.CharField(max_length=1000, blank=False)
+    answer = models.IntegerField(choices=choice)
+    def __str__(self):
+        return self.question
+    class Meta:
+        ordering = ["pk"]
+        
+class StudentAnswer(models.Model):
+    student = models.ForeignKey(User, on_delete=CASCADE , null=True)
+    question = models.ForeignKey(Question, on_delete=CASCADE, null=True)
+    answer = models.IntegerField(choices=choice, null=True)
+    def __str__(self):
+        return self.answer
+    class Meta:
+        ordering = ["pk"]
