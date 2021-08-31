@@ -24,4 +24,5 @@ urlpatterns = [
     path('create_assignment/',CreateAssignment.as_view()),
     path('create_test/',CreateTest.as_view()),
     path('assignment_of_subject/<int:pk>/',Assignment_of_subject),
+    path('getuser/', getUser.as_view())
 ]

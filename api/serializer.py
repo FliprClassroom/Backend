@@ -8,7 +8,7 @@ class RegistrationAPISerializer(serializers.ModelSerializer):
       model = User
       fields = ("username","password","email","is_staff")
 
-class StudentInfoSerializer(serializers.ModelSerializer):
+class UserInfoSerializer(serializers.ModelSerializer):
    class Meta:
       model = User
       fields = ("id","username","email","is_staff")

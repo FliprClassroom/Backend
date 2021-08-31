@@ -1,5 +1,6 @@
 from django.contrib.auth import *
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -38,7 +39,7 @@ class Users_with_subject(APIView):
         required_relations = paginator.paginate_queryset(relations,request)
         listt = []
         for item in required_relations:listt.append(item.user)
-        users = StudentInfoSerializer(listt,many = True)
+        users = UserInfoSerializer(listt,many = True)
         return paginator.get_paginated_response(users.data)
 
 class Subjects_of_user(APIView):
@@ -112,6 +113,15 @@ class Assignment_of_subject(APIView):
             return Response({"assignment":assignment_ser.data,"questions":questions_ser.data})
         except Exception as e:
             return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class getUser(APIView):
+    def post(self,req):
+        JWT = JWTAuthentication()
+        token = req.data.get("token")
+        validated_token = JWT.get_validated_token(token)
+        user = JWT.get_user(validated_token)
+        userser = UserInfoSerializer(user)
+        return Response(userser.data)
 
 class TenPerPage(PageNumberPagination):
     page_size = 10
