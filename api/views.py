@@ -59,12 +59,13 @@ class CreateAssignment(APIView):
             data = req.data
             title = data.get('title')
             subject = data.get('subject')
+            duedate = data.get('duedate')
             try: subject = Subject.objects.get(id=subject)
             except: return Response('subject do not exist', status=status.HTTP_404_NOT_FOUND)
             questions = data.get('questions')
             if type(questions)!=list:
                 return Response("questions must be a list",status=status.HTTP_405_METHOD_NOT_ALLOWED)
-            assignment_instance = Assignment(title=title,subject=subject)
+            assignment_instance = Assignment(title=title,subject=subject,duedate=duedate)
             assignment_instance.save()
             for item in questions:
                 item["assignment"] = assignment_instance.pk
@@ -84,12 +85,13 @@ class CreateTest(APIView):
             data = req.data
             title = data.get('title')
             subject = data.get('subject')
+            duedate = data.get('duedate')
             try: subject = Subject.objects.get(id=subject)
             except: return Response('subject do not exist', status=status.HTTP_404_NOT_FOUND)
             questions = data.get('questions')
             if type(questions)!=list:
                 return Response("questions must be a list",status=status.HTTP_405_METHOD_NOT_ALLOWED)
-            test_instance = Test(title=title,subject=subject)
+            test_instance = Test(title=title,subject=subject,duedate=duedate)
             test_instance.save()
             for item in questions:
                 item["test"] = test_instance.pk
