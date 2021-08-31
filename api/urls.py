@@ -12,7 +12,7 @@ router = DefaultRouter()
 router.register('subject', SubjectAPIView, basename='subject')
 router.register('assignment', AssignmentAPIView, basename='assignment')
 router.register('test', TestAPIView, basename='test')
-router.register('usersubject', SubjectAPIView, basename='usersubject')
+router.register('usersubject', UserSubjectRelationAPIView, basename='usersubject')
 
 urlpatterns = [
     path('crud/', include(router.urls)),
@@ -23,6 +23,6 @@ urlpatterns = [
     path('subjects_of_user/<int:pk>/',Subjects_of_user.as_view()),
     path('create_assignment/',CreateAssignment.as_view()),
     path('create_test/',CreateTest.as_view()),
-    path('assignment_of_subject/<int:pk>/',Assignment_of_subject),
+    path('assignment_of_subject/<int:pk>/',Assignment_of_subject.as_view()),
     path('getuser/', getUser.as_view())
 ]

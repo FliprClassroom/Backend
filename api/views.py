@@ -106,11 +106,27 @@ class CreateTest(APIView):
 class Assignment_of_subject(APIView):
     def get(self,req,pk):
         try:
-            assignment = Assignment.objects.get(subject=pk)
-            questions = Question.objects.filter(assignment=assignment.id)
-            assignment_ser = AssignmentSerializer(assignment)
+            assignment = Assignment.objects.filter(subject=pk)
+            assignment_ser = AssignmentSerializer(assignment,many=True)
+            return Response(assignment_ser.data)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class QuestionsOfAssignment(APIView):
+    def get(self,req,pk):
+        try:
+            questions = Question.objects.filter(assignment=pk)
             questions_ser = QuestionSerializer(questions,many=True)
-            return Response({"assignment":assignment_ser.data,"questions":questions_ser.data})
+            return Response(questions_ser.data)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class QuestionsOfAssignmentWithoutAnswers(APIView):
+    def get(self,req,pk):
+        try:
+            questions = Question.objects.filter(assignment=pk)
+            questions_ser = QuestionSerializer(questions,many=True)
+            return Response(questions_ser.data)
         except Exception as e:
             return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
