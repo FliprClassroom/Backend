@@ -26,6 +26,7 @@ urlpatterns = [
     path('create_test/',CreateTest.as_view()),
     path('answer_test/',AnswerTest.as_view()),
     path('assignment_of_subject/<int:pk>/',Assignment_of_subject.as_view()),
+    path('assignment_of_user/<int:pk>/',Assignment_of_user.as_view()),
     path('questions_of_assignment/<int:pk>/',QuestionsOfAssignment.as_view()),
     path('questions_of_assignment_with_answer/<int:pk>/',QuestionsOfAssignmentWithAnswers.as_view()),
     path('getuser/', getUser.as_view())
