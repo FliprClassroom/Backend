@@ -140,6 +140,27 @@ class Assignment_of_user(APIView):
         except Exception as e:
             return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class Test_of_subject(APIView):
+    def get(self,req,pk):
+        try:
+            test = Test.objects.filter(subject=pk)
+            test_ser = TestSerializer(test,many=True)
+            return Response(test_ser.data)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class Test_of_user(APIView):
+    def get(self,req,pk):
+        try:
+            subject_of_user = UserSubjectRelation.objects.filter(user=pk)
+            ids = []
+            for item in subject_of_user: ids.append(item.subject.id)
+            test = Test.objects.filter(subject__in=ids)
+            test_ser = TestSerializer(test,many=True)
+            return Response(test_ser.data)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class QuestionsOfAssignment(APIView):
     def get(self,req,pk):
         try:
