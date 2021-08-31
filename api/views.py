@@ -60,12 +60,19 @@ class CreateAssignment(APIView):
             title = data.get('title')
             subject = data.get('subject')
             duedate = data.get('duedate')
+            user_id = data.get('user_id')
+            user = User.objects.get(pk=user_id)
+            teacher_name = user.username
+            relationser = UserSubjectRelationSerializer(data = {"user":user_id,"subject":subject})
+            if not relationser.is_valid():
+                return Response(relationser.errors,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            relationser.save()
             try: subject = Subject.objects.get(id=subject)
             except: return Response('subject do not exist', status=status.HTTP_404_NOT_FOUND)
             questions = data.get('questions')
             if type(questions)!=list:
                 return Response("questions must be a list",status=status.HTTP_405_METHOD_NOT_ALLOWED)
-            assignment_instance = Assignment(title=title,subject=subject,duedate=duedate)
+            assignment_instance = Assignment(title=title,subject=subject,duedate=duedate,teacher_name=teacher_name)
             assignment_instance.save()
             for item in questions:
                 item["assignment"] = assignment_instance.pk
@@ -86,12 +93,19 @@ class CreateTest(APIView):
             title = data.get('title')
             subject = data.get('subject')
             duedate = data.get('duedate')
+            user_id = data.get('user_id')
+            user = User.objects.get(pk=user_id)
+            teacher_name = user.username
+            relationser = UserSubjectRelationSerializer(data = {"user":user_id,"subject":subject})
+            if not relationser.is_valid():
+                return Response(relationser.errors,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            relationser.save()
             try: subject = Subject.objects.get(id=subject)
             except: return Response('subject do not exist', status=status.HTTP_404_NOT_FOUND)
             questions = data.get('questions')
             if type(questions)!=list:
                 return Response("questions must be a list",status=status.HTTP_405_METHOD_NOT_ALLOWED)
-            test_instance = Test(title=title,subject=subject,duedate=duedate)
+            test_instance = Test(title=title,subject=subject,duedate=duedate,teacher_name=teacher_name)
             test_instance.save()
             for item in questions:
                 item["test"] = test_instance.pk
@@ -100,7 +114,7 @@ class CreateTest(APIView):
                 questions_ser.save()
             ser = TestSerializer(test_instance)
             data = ser.data
-            data["questions"] = questions_ser
+            data["questions"] = questions_ser.data
             return Response(data)
         except Exception as e:
             return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -47,3 +47,8 @@ class StudentScoreSerializer(serializers.ModelSerializer):
    class Meta:
       model = StudentScore
       fields = "__all__"
+
+class UserSubjectRelationSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = UserSubjectRelation
+      fields = "__all__"
